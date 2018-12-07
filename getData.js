@@ -19,10 +19,21 @@ const getDateForSpecificWeek = (weekIndex) => {
 const getPeriodEventFromPosition = (date, hourHeight, height, top, left) => {
   const day = 1 + Math.round((left - 2 ) / 19.6)
   const timeStartIndex = Math.round((top - 120) / 56.665)
-  const timeEndIndex = ((height - 5.16) / hourHeight)
+  const timeEndIndex = Math.round((height - 5.16) / hourHeight) // A BIT BUGGED STILL
 
-  console.log(hourHeight, height)
-  return {day, timeStart: timeStartIndex + 8, timeEnd: timeEndIndex}
+  const timeStart = timeStartIndex + 8
+  const timeEnd = timeStart + timeEndIndex
+
+  return {day, timeStart, timeEnd}
+}
+
+const getHourHeight = ($) => {
+  const style = $('style').html().split('\n').filter((line) => line.startsWith('.THeure'))[0]
+  const res = /height:([^;]*)px;*/.exec(style)
+  if(res === null || res.length !== 2){
+    throw "Error while parsing the Hours Height Value"
+  }
+  return res[1]
 }
 
 const getData = (config) => {
@@ -39,15 +50,13 @@ const getData = (config) => {
       return Promise.resolve([]) 
     }
 
-    const hourHeight = $('.THeure').children().first().css('height').splice(0, -2) ///BUGGED
-
     const events = $('div.Case').map((_, div) => {
       div = $(div)
       const height = div.css('height').slice(0, -2) // remove "px"
       const top = div.css('top').slice(0, -2) // remove "px"
       const left = +$(div).css('left').slice(0, -1) // remove "%"
       
-      return {data: getPeriodEventFromPosition(getDateForSpecificWeek(urlIndex), hourHeight, height, top, left)}
+      return {data: getPeriodEventFromPosition(getDateForSpecificWeek(urlIndex), getHourHeight($), height, top, left)}
     }).get()
     return Promise.resolve(events)
   })))
