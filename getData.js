@@ -16,24 +16,16 @@ const getDateForSpecificWeek = (weekIndex) => {
   return specificFirstDate
 }
 
-const getPeriodEventFromPosition = (date, hourHeight, height, top, left) => {
-  const day = 1 + Math.round((left - 2 ) / 19.6)
-  const timeStartIndex = Math.round((top - 120) / 56.665)
-  const timeEndIndex = Math.round((height - 5.16) / hourHeight) // A BIT BUGGED STILL
+const getPeriodEventFromPosition = (date, left, period) => {
+  const day = Math.round((left - 2 ) / 19.6)
 
-  const timeStart = timeStartIndex + 8
-  const timeEnd = timeStart + timeEndIndex
-
-  return {day, timeStart, timeEnd}
-}
-
-const getHourHeight = ($) => {
-  const style = $('style').html().split('\n').filter((line) => line.startsWith('.THeure'))[0]
-  const res = /height:([^;]*)px;*/.exec(style)
-  if(res === null || res.length !== 2){
-    throw "Error while parsing the Hours Height Value"
+  const res = /(.*) - (.*)/.exec(period)
+  if(res === null || res.length !== 3){
+    throw "Impossible to extract date from td"
   }
-  return res[1]
+
+  const dates = res.filter((_, i) => i >= 1).map((str) => str.split(':')).map((periode) => (date.getTime() + (day * 24 * 3600 * 1000) + (periode[0] * 3600 * 1000)))
+  return {dateStart: dates[0], dateEnd: dates[1]}
 }
 
 const getData = (config) => {
@@ -52,12 +44,17 @@ const getData = (config) => {
 
     const events = $('div.Case').map((_, div) => {
       div = $(div)
-      const height = div.css('height').slice(0, -2) // remove "px"
-      const top = div.css('top').slice(0, -2) // remove "px"
-      const left = +$(div).css('left').slice(0, -1) // remove "%"
-      
-      return {data: getPeriodEventFromPosition(getDateForSpecificWeek(urlIndex), getHourHeight($), height, top, left)}
+
+      const left = +div.css('left').slice(0, -1) // remove "%"
+      const period = div.find('tr:nth-child(1) td:nth-child(1)').text()
+      const title = div.find('td.TCase').text()
+         
+      return {
+        periode: getPeriodEventFromPosition(getDateForSpecificWeek(urlIndex), left, period),
+        title
+      }
     }).get()
+
     return Promise.resolve(events)
   })))
 }
