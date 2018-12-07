@@ -5,7 +5,7 @@ const throwError = (message) => {
   process.exit(1)
 }
 
-const loadConfig = () => {
+const getConfig = () => {
   require('dotenv').config()
 
   if(REQUIRED_ENV.map((cookieKey) => process.env[cookieKey]).some((cookieValue) => cookieValue === undefined)){
@@ -30,6 +30,8 @@ const loadConfig = () => {
   if(!URL_PATTERN.includes('$USERNAME') || !URL_PATTERN.includes('$DATE')){
     throwError("Your env variable URL_PATTERN doesn't contains the supposed parameters $USERNAME and $DATE.")
   }
+
+  return Promise.resolve({USERNAME_TO_SCRAP, DURATION_TO_GET_IN_WEEKS, URL_PATTERN})
 }
 
-module.exports = loadConfig
+module.exports = getConfig
