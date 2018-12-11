@@ -9,8 +9,8 @@ const getUrl = (urlPattern, username, date) => {
 
 const formatDate = (date = new Date()) => `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
 
-const getDateForSpecificWeek = (weekIndex) => {
-  const actualDate = new Date()//(2018, 10, 27) // TMP
+const getDateForSpecificWeek = (date, weekIndex) => {
+  const actualDate = new Date(date)
   const actualFirstDayDate = new Date(actualDate.getFullYear(), actualDate.getMonth(), actualDate.getDate() - actualDate.getDay() + 1)
   const specificFirstDate = new Date(actualFirstDayDate.getTime() + (7 * 24 * 3600 * 1000) * weekIndex)
   return specificFirstDate
@@ -28,11 +28,16 @@ const getPeriodEventFromPosition = (date, left, period) => {
   return {dateStart: dates[0], dateEnd: dates[1]}
 }
 
+const getDataFromProfessorHTML = (professorHtml) => {
+  const [_, professor, promotion] = professorHtml.split('<br>')
+  return {professor, promotion}
+}
+
 const getData = (config) => {
-  const {USERNAME_TO_SCRAP, DURATION_TO_GET_IN_WEEKS, URL_PATTERN} = config
+  const {USERNAME_TO_SCRAP, DURATION_TO_GET_IN_WEEKS, URL_PATTERN, CURRENT_DATE} = config
   
   const urls = Array(DURATION_TO_GET_IN_WEEKS).fill()
-  .map((_, indexWeek) => getDateForSpecificWeek(indexWeek))
+  .map((_, indexWeek) => getDateForSpecificWeek(CURRENT_DATE, indexWeek))
   .map((date) => formatDate(date))
   .map((date) => getUrl(URL_PATTERN, USERNAME_TO_SCRAP, date))
 
@@ -48,10 +53,12 @@ const getData = (config) => {
       const left = +div.css('left').slice(0, -1) // remove "%"
       const period = div.find('tr:nth-child(1) td:nth-child(1)').text()
       const title = div.find('td.TCase').text()
+      const professorHtml = div.find('td.TCProf').html()
          
       return {
-        periode: getPeriodEventFromPosition(getDateForSpecificWeek(urlIndex), left, period),
-        title
+        periode: getPeriodEventFromPosition(getDateForSpecificWeek(CURRENT_DATE, urlIndex), left, period),
+        title,
+        ...getDataFromProfessorHTML(professorHtml)
       }
     }).get()
 

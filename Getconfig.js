@@ -31,7 +31,10 @@ const getConfig = () => {
     throwError("Your env variable URL_PATTERN doesn't contains the supposed parameters $USERNAME and $DATE.")
   }
 
-  return Promise.resolve({USERNAME_TO_SCRAP, DURATION_TO_GET_IN_WEEKS, URL_PATTERN})
+  const CURRENT_DATE = process.env['CURRENT_DATE'] ? new Date(process.env['CURRENT_DATE']) : new Date()
+  console.log("current date : "+CURRENT_DATE)
+
+  return Promise.resolve({USERNAME_TO_SCRAP, DURATION_TO_GET_IN_WEEKS, URL_PATTERN, CURRENT_DATE})
 }
 
 module.exports = getConfig
