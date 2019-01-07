@@ -11,7 +11,14 @@ const exportData = (events, config) => {
   }))
 
   const filePath = path.join(config.EXPORT_PATH, config.EXPORT_NAME)
-  fs.mkdirSync(path.dirname(filePath))
+  if(fs.existsSync(filePath)){
+    console.log("File allready exists, removing.")
+    fs.unlinkSync(filePath)
+  }
+  if(!fs.existsSync(path.dirname(filePath))){
+    console.log("Path file does not exist, creating.")
+    fs.mkdirSync(path.dirname(filePath))
+  }
   fs.writeFileSync(filePath, ical.toString())
 
   return events

@@ -20,7 +20,7 @@ GET_CONFIG()
     .then((data) => FORMAT_DATA(data, config))
     .then((formatedData) => EXPORT_DATA(formatedData, config))
     .then((data) => {
-      console.log(JSON.stringify(data))
+      //console.log(JSON.stringify(data))
       console.log(`${data.length} events found.`)
     })
   )
