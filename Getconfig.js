@@ -34,7 +34,17 @@ const getConfig = () => {
   const CURRENT_DATE = process.env['CURRENT_DATE'] ? new Date(process.env['CURRENT_DATE']) : new Date()
   console.log("current date : "+CURRENT_DATE)
 
-  return Promise.resolve({USERNAME_TO_SCRAP, DURATION_TO_GET_IN_WEEKS, URL_PATTERN, CURRENT_DATE})
+  let EXPORT_PATH = process.env['EXPORT_PATH']
+  if(!EXPORT_PATH){
+    EXPORT_PATH = "./"
+  }
+
+  let EXPORT_NAME = process.env['EXPORT_NAME']
+  if(!EXPORT_NAME){
+    EXPORT_NAME = "events.ical"
+  }
+
+  return Promise.resolve({USERNAME_TO_SCRAP, DURATION_TO_GET_IN_WEEKS, URL_PATTERN, CURRENT_DATE, EXPORT_PATH, EXPORT_NAME})
 }
 
 module.exports = getConfig
