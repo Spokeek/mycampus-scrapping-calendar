@@ -42,7 +42,7 @@ const getData = (config) => {
   .map((date) => getUrl(URL_PATTERN, USERNAME_TO_SCRAP, date))
 
   return Promise.all(urls.map((url, urlIndex) => request(url).then((html) => {
-    const $ = cheerio.load(html)
+    const $ = cheerio.load(html, {decodeEntities: false})
     if($('.THeure').length === 0){
       return Promise.resolve([]) 
     }

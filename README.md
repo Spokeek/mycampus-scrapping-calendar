@@ -13,20 +13,17 @@ This script uses NodeJS (developped from version 10) and is intended to be insta
 you will need to define some environement variables to make it work properly.
 
 
-PAGE_URL: the http url used to scrap containing a "[date]" used as a parameter with US format
+URL_PATTERN: the http url pattern used to scrap containing the $USERNAME parameter and the $DATE parameter.
 
-COOKIE_ZOPEID: ZOPEID cookie value when using the website in a classic way.
+USERNAME_TO_SCRAP: The username to scrap on the website (use the official format used in the url).
 
-COOKIE_AC: AC cookie value when using the website in a classic way.
+DURATION_TO_GET_IN_WEEKS: the number of weeks to scrap on the calendar.
 
-DURATION_TO_GET_IN_DAYS: the number of days to scrap on the calendar.
+CURRENT_DATE: Parameter used to defined the current day when the script is run, as it will begin to work on the current week, you can move this week with this value.
 
-[HTTP_RETRY_COUNT]: optional variable used to define the number of retries to get the page from the website
+EXPORT_PATH: Path where the script file will be created (./)
 
-
-If all of this is done, the script will create a file named events.ics in the same folder.
-You can then put it where you want.
-The is allready the run.sh that i use personally to move it to a nginx folder. you can change it as you want.
+EXPORT_VALUE: Name of the ics file (events.ics)
 
 
 Feel free to comment if you need to.
