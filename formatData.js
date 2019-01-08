@@ -1,5 +1,7 @@
 const formatData = (data) => {
-  return data.reduce((acc, curr) => ([...acc, ...curr]), [])
+  data = data.reduce((acc, curr) => ([...acc, ...curr]), [])
+  //console.log(data)
+  return data
 }
 
 module.exports = formatData

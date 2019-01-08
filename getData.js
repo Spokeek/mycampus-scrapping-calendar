@@ -52,12 +52,14 @@ const getData = (config) => {
 
       const left = +div.css('left').slice(0, -1) // remove "%"
       const period = div.find('tr:nth-child(1) td:nth-child(1)').text()
+      const room = div.find('tr:nth-child(1) td:nth-child(2)').text().substr(6)
       const title = div.find('td.TCase').text()
       const professorHtml = div.find('td.TCProf').html()
          
       return {
         periode: getPeriodEventFromPosition(getDateForSpecificWeek(CURRENT_DATE, urlIndex), left, period),
         title,
+        room,
         ...getDataFromProfessorHTML(professorHtml)
       }
     }).get()
