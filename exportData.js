@@ -7,7 +7,7 @@ const exportData = (events, config) => {
     start: new Date(event.periode.dateStart),
     end: new Date(event.periode.dateEnd),
     summary: event.title,
-    description: `Professor:\t${event.professor}\nPromotion:\t${event.promotion}\nRoom:\t${event.room}`
+    description: `Professor:\t${event.professor}\nPromotion:\t${event.promotion}\nRoom:\t\t${event.room}`
   }))
 
   const filePath = path.join(config.EXPORT_PATH, config.EXPORT_NAME)
